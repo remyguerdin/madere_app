@@ -36,17 +36,33 @@
     button { cursor:pointer; }
     button.primary { border-color: rgba(34,197,94,.5); }
     .main { display:grid; grid-template-columns: 320px 1fr; height:100%; }
-    @media (max-width: 900px) { .main { grid-template-columns: 1fr; } .sidebar { order:2; } #map { order:1; height:55dvh; } }
-    .sidebar { padding:12px; background:rgba(255,255,255,.02); border-right:1px solid rgba(255,255,255,.08); overflow:auto; }
-    .card { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:14px; padding:10px; margin-bottom:10px; }
-    .card h2 { font-size:14px; margin:0 0 6px 0; }
-    .muted { color:var(--muted); font-size:12px; line-height:1.3; }
-    .list { display:flex; flex-direction:column; gap:8px; margin-top:10px; }
-    .item { padding:10px; border-radius:12px; border:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03); }
-    .item .top { display:flex; justify-content:space-between; gap:10px; align-items:flex-start; }
-    .pill { font-size:11px; padding:3px 8px; border-radius:999px; border:1px solid rgba(255,255,255,.10); color:var(--muted); }
-    .item button { width:100%; margin-top:8px; }
-    #map { height:100%; }
+    @media (max-width: 900px) {
+  .main { grid-template-columns: 1fr; }
+  #map { height: 100dvh; }               /* 👈 carte plein écran */
+  .sidebar {
+    position: fixed;
+    left: 0; right: 0; bottom: 0;
+    z-index: 9000;
+    max-height: 55dvh;
+    transform: translateY(100%);
+    transition: transform .25s ease;
+    background: rgba(11,18,32,.98);
+    border-top: 1px solid rgba(255,255,255,.10);
+  }
+  .sidebar.open { transform: translateY(0); }
+  .mobile-toggle {
+    position: fixed;
+    left: 14px;
+    bottom: 14px;
+    z-index: 9500;
+    border-radius: 999px;
+    padding: 12px 14px;
+    background: rgba(255,255,255,.08);
+    border: 1px solid rgba(255,255,255,.12);
+    backdrop-filter: blur(8px);
+    font-weight: 700;
+  }
+}
     .popup-title { font-weight:700; margin-bottom:4px; }
     .popup-meta { font-size:12px; color:#cbd5e1; margin-bottom:6px; }
     .popup-note { font-size:12px; color:#e5e7eb; white-space:pre-wrap; }
@@ -232,13 +248,10 @@
 
 <div id="photoGrid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:10px;"></div>
     
-    
-    
-    
   </div>
 </div>
 
-
+  <button class="mobile-toggle" id="btnToggleList">📋 Liste</button> 
 
 
 <script>
@@ -488,6 +501,17 @@ function uid(prefix="ph") {
       marker.addTo(markersLayer);
     });
   }
+  
+  const btnToggleList = document.getElementById("btnToggleList");
+const sidebar = document.querySelector(".sidebar");
+
+function isMobile() { return window.matchMedia("(max-width: 900px)").matches; }
+
+btnToggleList?.addEventListener("click", () => {
+  if (!isMobile()) return;
+  sidebar.classList.toggle("open");
+});
+
 
   function renderList(filteredAll) {
     poiList.innerHTML = "";
@@ -823,5 +847,8 @@ f_photos.addEventListener("change", async () => {
   // init
   renderAll();
 </script>
+
+
+
 </body>
 </html>
