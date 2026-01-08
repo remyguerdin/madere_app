@@ -39,19 +39,22 @@
     @media (max-width: 900px) {
   .main { grid-template-columns: 1fr; }
   #map { height: 100dvh; }               /* 👈 carte plein écran */
-   .sidebar {
-      overscroll-behavior: contain;
+    .sidebar {
     position: fixed;
-    left: 0;
-    right: 0;
-    bottom: 0;
+    left: 0; right: 0; bottom: 0;
     z-index: 9000;
 
-    max-height: 55dvh;          /* hauteur visible */
     height: 55dvh;
+    max-height: 55dvh;
 
-    display: flex;              /* 👈 clé */
-    flex-direction: column;     /* 👈 clé */
+    display: flex;
+    flex-direction: column;
+
+    padding: 12px;
+    box-sizing: border-box;
+
+    overflow: hidden;           /* 👈 important : on empêche la sidebar de scroller */
+    min-height: 0;              /* 👈 clé pour permettre au child scroll */
 
     transform: translateY(100%);
     transition: transform .25s ease;
@@ -60,8 +63,8 @@
     border-top: 1px solid rgba(255,255,255,.10);
   }
 
-  .sidebar.open {
-    transform: translateY(0); }
+  .sidebar.open { transform: translateY(0); }
+}
   .mobile-toggle {
     position: fixed;
     left: 14px;
@@ -97,9 +100,10 @@
   }
       /* Conteneur de la liste */
 .list {
-  flex: 1;                 /* 👈 prend l’espace restant */
-  overflow-y: auto;        /* 👈 scroll vertical */
-  -webkit-overflow-scrolling: touch; /* 👈 inertie iOS/Android */
+  flex: 1;                        /* prend tout l’espace restant */
+  min-height: 0;                  /* 👈 clé : autorise le scroll dans un child flex */
+  overflow-y: auto;               /* scroll vertical */
+  -webkit-overflow-scrolling: touch;
 }
 
   .modal-backdrop {
