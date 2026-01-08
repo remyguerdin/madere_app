@@ -39,17 +39,29 @@
     @media (max-width: 900px) {
   .main { grid-template-columns: 1fr; }
   #map { height: 100dvh; }               /* 👈 carte plein écran */
-  .sidebar {
+   .sidebar {
+      overscroll-behavior: contain;
     position: fixed;
-    left: 0; right: 0; bottom: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     z-index: 9000;
-    max-height: 55dvh;
+
+    max-height: 55dvh;          /* hauteur visible */
+    height: 55dvh;
+
+    display: flex;              /* 👈 clé */
+    flex-direction: column;     /* 👈 clé */
+
     transform: translateY(100%);
     transition: transform .25s ease;
+
     background: rgba(11,18,32,.98);
     border-top: 1px solid rgba(255,255,255,.10);
   }
-  .sidebar.open { transform: translateY(0); }
+
+  .sidebar.open {
+    transform: translateY(0); }
   .mobile-toggle {
     position: fixed;
     left: 14px;
@@ -62,6 +74,8 @@
     backdrop-filter: blur(8px);
     font-weight: 700;
   }
+
+
 }
     .popup-title { font-weight:700; margin-bottom:4px; }
     .popup-meta { font-size:12px; color:#cbd5e1; margin-bottom:6px; }
@@ -139,7 +153,12 @@
   font-size:12px;
 }
     
-    
+      /* Conteneur de la liste */
+.list {
+  flex: 1;                 /* 👈 prend l’espace restant */
+  overflow-y: auto;        /* 👈 scroll vertical */
+  -webkit-overflow-scrolling: touch; /* 👈 inertie iOS/Android */
+}
     
   </style>
 </head>
@@ -248,13 +267,18 @@
 
 <div id="photoGrid" style="display:grid; grid-template-columns: repeat(3, 1fr); gap:8px; margin-top:10px;"></div>
     
+    
+   <button class="mobile-toggle" id="btnToggleList">📋 Liste</button> 
+    
   </div>
 </div>
 
-  <button class="mobile-toggle" id="btnToggleList">📋 Liste</button> 
+
 
 
 <script>
+
+
   // -----------------------------
   // Données & stockage local
   // -----------------------------
